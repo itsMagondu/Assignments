@@ -1,26 +1,42 @@
 <?php
-require_once ('lib/nusoap.php');
-$URL       = "localhost/cdt504/webservice/";
-$namespace = $URL . '?wsdl';
+require_once "lib/nusoap.php";
+ 
+class math {
+    public function fibNum($num)
+    {
+    // based on http://stackoverflow.com/questions/15600041/php-fibonacci-sequence
+    return round(pow((sqrt(5)+1)/2, $num) / sqrt(5));
+    }
 
-function getProd($category) {
-    if ($category == "books") {
-        return join(",", array(
-            "The WordPress Anthology",
-            "PHP Master: Write Cutting Edge Code",
-            "Build Your Own Website the Right Way"));
-	    }
-	    else {
-            return "No products listed under that category";
-	    }
+    public function fibList($num){
+     $fibarray = array(0, 1);
+     for ( $i=2; $i<=$num; ++$i ) {
+     	 $fibarray[$i] = $fibarray[$i-1] + $fibarray[$i-2];
+ 	 }	       
+	 return implode(",", $fibarray);
+    }
+
 }
+ 
+$server = new soap_server();
+$server->configureWSDL("CDT504 Fibonnaci service", "http://localhost/cdt504/webservice/");
+ 
+$server->register("math.fibNum",
+    array("type" => "xsd:number"),
+    array("return" => "xsd:number"),
+    "http://localhost/cdt504/webservice/",
+    "http://localhost/cdt504/webservice/#fib",
+    "rpc",
+    "encoded",
+    "Get fibonnaci number based on input");
 
-function getFib($number) {
-    return round(pow((sqrt(5)+1)/2, $n) / sqrt(5));
-}
-
-$server  = new soap_server;
-$server->configureWSDL('CDT 504 Web Service Test', $namespace);
-
-$server->register("getFib");
-$server->service($HTTP_RAW_POST_DATA);
+$server->register("math.fibList",
+    array("type" => "xsd:number"),
+    array("return" => "xsd:numberArray"),
+    "http://localhost/cdt504/webservice/",
+    "http://localhost/cdt504/webservice/#fibList",
+    "rpc",
+    "encoded",
+    "Get fibonnaci array based on input");
+ 
+@$server->service($HTTP_RAW_POST_DATA);

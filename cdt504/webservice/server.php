@@ -15,7 +15,6 @@ class math {
  	 }	       
 	 return implode(",", $fibarray);
     }
-
 }
  
 $server = new soap_server();

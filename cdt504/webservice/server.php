@@ -31,7 +31,7 @@ $server->register("math.fibNum",
 
 $server->register("math.fibList",
     array("type" => "xsd:number"),
-    array("return" => "xsd:numberArray"),
+    array("return" => "xsd:string"),
     "http://localhost/cdt504/webservice/",
     "http://localhost/cdt504/webservice/#fibList",
     "rpc",
